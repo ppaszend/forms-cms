@@ -1,0 +1,9 @@
+[submodule "src/components/shared"]
+	path = src/components/shared
+	url = https://github.com/ppaszend/forms-components.git
+[submodule "src/helpers/shared"]
+	path = src/helpers/shared
+	url = https://github.com/ppaszend/forms-helpers.git
+[submodule "src/shared"]
+	path = src/shared
+	url = https://github.com/ppaszend/forms-shared.git
