@@ -1,0 +1,97 @@
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { getFieldByPosition, getRowByPosition } from "@/helpers/shared/getters";
+import { generateEmptyFormData } from "@/helpers/shared/generators";
+
+import type { FormData } from "@/shared/models/FormData";
+import type { FieldExactPosition } from "@/shared/models/FieldExactPosition";
+import type { Field } from "@/shared/models/Field";
+import type { Form } from "@/shared/models/Form";
+
+export const useFormStore = defineStore("form", () => {
+  const editable = ref<boolean>(true);
+  const form = ref<Form | null>(null);
+  const formData = ref<FormData[]>([]);
+
+  const fetchForm = async (formId: string) => {
+    const response = await fetch(`http://localhost:3000/forms/${formId}`);
+    const data = await response.json();
+    if (!data) {
+      throw new Error("Form not found");
+    }
+
+    form.value = data;
+    formData.value = generateEmptyFormData(data);
+  };
+
+  const updateForm = async (newForm: Form) => {
+    if (!form.value) {
+      throw new Error("Form is not available");
+    }
+
+    await fetch(`http://localhost:3000/forms/${form.value._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newForm),
+    });
+
+    form.value = newForm;
+  };
+
+  const createField = async (
+    { stepId, sectionId, rowId, fieldId }: FieldExactPosition,
+    field: Field
+  ) => {
+    if (!form.value) {
+      throw new Error("Form is not available");
+    }
+
+    getRowByPosition(form.value, stepId, sectionId, rowId)?.fields.push({
+      ...field,
+      id: fieldId,
+    });
+
+    await updateForm(form.value);
+  };
+
+  const editField = (fieldExactPosition: FieldExactPosition) => {
+    if (!form.value) {
+      throw new Error("Form is not available");
+    }
+
+    const field = getFieldByPosition(
+      form.value,
+      fieldExactPosition.stepId,
+      fieldExactPosition.sectionId,
+      fieldExactPosition.rowId,
+      fieldExactPosition.fieldId
+    );
+  };
+
+  const removeField = () => {};
+
+  const getThemeForField = (fieldComponentName: string): object => {
+    if (!form.value) {
+      throw new Error("Form is not available");
+    }
+
+    return (
+      form.value.theme.fields.find(
+        (field) => fieldComponentName === field.component
+      ) || {}
+    );
+  };
+
+  return {
+    editable,
+    form,
+    formData,
+    fetchForm,
+    createField,
+    editField,
+    removeField,
+    getThemeForField,
+  };
+});
