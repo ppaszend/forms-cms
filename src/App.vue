@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView } from "vue-router";
 </script>
 
 <template>
   <header>
-    <router-link :to="{name: 'forms-all'}">Forms</router-link>
+    <router-link :to="{ name: 'forms-all' }">Forms</router-link>
   </header>
 
   <RouterView />

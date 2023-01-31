@@ -10,11 +10,13 @@ import {
   faPlus,
   faPenToSquare,
   faGripVertical,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 import "./assets/main.css";
 
-library.add(faPlus, faPenToSquare, faGripVertical);
+library.add(faPlus, faPenToSquare, faGripVertical, faXmark, faTrashCan);
 
 const app = createApp(App);
 

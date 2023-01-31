@@ -5,11 +5,7 @@
         Turn {{ formStore.editable ? "off" : "on" }} edit mode
       </button>
     </div>
-    <form-component
-      v-if="formStore.form"
-      :form="formStore.form"
-      :editable="true"
-    />
+    <form-component />
   </main>
 </template>
 
@@ -20,7 +16,9 @@ import { useFormStore } from "@/stores/form";
 
 const route = useRoute();
 const formStore = useFormStore();
-formStore.fetchForm(route.params.id);
+formStore.fetchForm(
+  typeof route.params.id === "string" ? route.params.id : route.params.id[0]
+);
 </script>
 <script lang="ts">
 export default {
